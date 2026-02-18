@@ -1,0 +1,6 @@
+@SaaS_Diver_HostAddress = http://localhost:5222
+
+GET {{SaaS_Diver_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
