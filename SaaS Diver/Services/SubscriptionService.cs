@@ -24,11 +24,26 @@ namespace SaaS_Diver.Services
 
         public async Task<Subscription> CreateSubscriptionAsync(Subscription subscription)
         {
-            // Aquí podrías poner lógica pro: 
-            // Validar si el suscriptor existe, si el plan está activo, etc.
+            // VALIDACIÓN: Evitar duplicidad de suscripciones activas
+            var hasActive = await _context.Subscriptions
+                .AnyAsync(s => s.SubscriberId == subscription.SubscriberId && s.Status == "Active");
+
+            if (hasActive)
+            {
+                throw new InvalidOperationException("El suscriptor ya tiene una suscripción activa.");
+            }
+
             _context.Subscriptions.Add(subscription);
             await _context.SaveChangesAsync();
             return subscription;
+        }
+
+        // LÓGICA DE NEGOCIO: Reporte de Ingresos
+        public async Task<decimal> GetTotalRevenueAsync()
+        {
+            return await _context.Subscriptions
+                .Where(s => s.Status == "Active")
+                .SumAsync(s => s.Plan.Price);
         }
     }
 }

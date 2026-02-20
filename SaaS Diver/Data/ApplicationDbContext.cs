@@ -17,8 +17,7 @@ namespace SaaS_Diver.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Creamos una fecha fija para que no cambie en cada compilación
-            var fechaFija = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var fecha = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             modelBuilder.Entity<SubscriptionPlan>().HasData(
                 new SubscriptionPlan { Id = 1, Name = "Basic Plan", Price = 9.99m, BillingCycle = "Monthly", IsActive = true },
@@ -32,7 +31,7 @@ namespace SaaS_Diver.Data
                     Name = "Juan Perez",
                     TaxId = "77665544",
                     Email = "juan.perez@email.com",
-                    RegistrationDate = fechaFija // Usamos la fecha fija aquí
+                    RegistrationDate = fecha
                 }
             );
 
@@ -42,7 +41,7 @@ namespace SaaS_Diver.Data
                     Id = 1,
                     SubscriberId = 1,
                     SubscriptionPlanId = 2,
-                    StartDate = fechaFija, // Y aquí también
+                    StartDate = fecha,
                     Status = "Active"
                 }
             );

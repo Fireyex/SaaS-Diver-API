@@ -26,10 +26,23 @@ namespace SaaS_Diver.Controllers
         [HttpPost]
         public async Task<ActionResult<Subscription>> PostSubscription(Subscription subscription)
         {
-            // La lógica de guardado está oculta en el servicio
-            var newSubscription = await _subscriptionService.CreateSubscriptionAsync(subscription);
+            try
+            {
+                var newSub = await _subscriptionService.CreateSubscriptionAsync(subscription);
+                return CreatedAtAction(nameof(GetActiveSubscriptions), new { id = newSub.Id }, newSub);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Si el suscriptor ya tiene una activa, devolvemos un error 400 claro
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
-            return CreatedAtAction(nameof(GetActiveSubscriptions), new { id = newSubscription.Id }, newSubscription);
+        [HttpGet("revenue")]
+        public async Task<ActionResult<object>> GetRevenue()
+        {
+            var total = await _subscriptionService.GetTotalRevenueAsync();
+            return Ok(new { total_revenue = total, currency = "USD", date = DateTime.UtcNow });
         }
     }
 }

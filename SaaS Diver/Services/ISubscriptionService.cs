@@ -6,5 +6,6 @@ namespace SaaS_Diver.Services
     {
         Task<IEnumerable<Subscription>> GetAllActiveSubscriptionsAsync();
         Task<Subscription> CreateSubscriptionAsync(Subscription subscription);
+        Task<decimal> GetTotalRevenueAsync();
     }
 }
